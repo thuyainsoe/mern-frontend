@@ -1,7 +1,26 @@
 import { Link } from "react-router-dom";
 import { FaFacebook, FaGoogle } from "react-icons/fa";
+import { useState } from "react";
 
 const Register = () => {
+  const [state, setState] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const inputHandler = (e) => {
+    setState({
+      ...state,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const submit = (e) => {
+    e.preventDefault();
+    console.log(state);
+  };
+
   return (
     <div className="min-w-screen min-h-screen bg-[#cdcae9] flex justify-center items-center">
       <div className="w-[350px] text-white p-2">
@@ -10,7 +29,7 @@ const Register = () => {
           <p className="text-sm mb-3 font-medium">
             Please register your account.
           </p>
-          <form>
+          <form onSubmit={submit}>
             <div className="flex flex-col w-full gap-1 mb-3">
               <label htmlFor="name">Name</label>
               <input
@@ -20,6 +39,8 @@ const Register = () => {
                 placeholder="Name"
                 id="name"
                 required
+                onChange={inputHandler}
+                value={state.name}
               />
             </div>
             <div className="flex flex-col w-full gap-1 mb-3">
@@ -31,6 +52,8 @@ const Register = () => {
                 placeholder="Email"
                 id="email"
                 required
+                onChange={inputHandler}
+                value={state.email}
               />
             </div>
             <div className="flex flex-col w-full gap-1 mb-3">
@@ -42,6 +65,8 @@ const Register = () => {
                 placeholder="Password"
                 id="password"
                 required
+                onChange={inputHandler}
+                value={state.password}
               />
             </div>
             <div className="flex items-center w-full gap-3 mb-3">
