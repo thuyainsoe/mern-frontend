@@ -212,7 +212,7 @@ const Orders = () => {
   );
 
   return (
-    <div className="px-4 md:px-6 py-6">
+    <div className="p-3">
       <DataTable
         data={data}
         columns={columns}

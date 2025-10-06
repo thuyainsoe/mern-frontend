@@ -6,7 +6,15 @@ import {
   getPaginationRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import { FiChevronDown, FiChevronUp } from "react-icons/fi";
+import {
+  FiChevronDown,
+  FiChevronUp,
+  FiPlus,
+  FiDownload,
+  FiUpload,
+  FiFilter,
+} from "react-icons/fi";
+import Dropdown from "./Dropdown";
 
 const DataTable = ({
   data,
@@ -16,16 +24,26 @@ const DataTable = ({
   pageSize = 5,
   showPagination = true,
   showSearch = true,
+  // Header Actions
+  showAddNew = false,
+  showImport = false,
+  showExport = false,
+  showFilter = false,
+  onAddNew,
+  onImport,
+  onExport,
+  filterOptions = [],
+  onFilterChange,
 }) => {
   const [globalFilter, setGlobalFilter] = useState("");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const filterRef = useRef(null);
 
-  // Close dropdown when clicking outside
+  // Close filter dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setIsFilterOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -51,20 +69,87 @@ const DataTable = ({
 
   return (
     <div className="w-full bg-white rounded-md shadow-lg overflow-hidden">
-      {/* Header with Search */}
-      {(title || showSearch) && (
+      {/* Header with Search and Actions */}
+      {(title || showSearch || showAddNew || showImport || showExport || showFilter) && (
         <div className="p-4 md:py-4 md:p-6 border-b border-slate-200">
-          <div className="flex flex-col items-start md:flex-row justify-between gap-y-2 md:items-center">
-            {title && (
-              <h2 className="text-xl font-bold text-slate-800">{title}</h2>
-            )}
-            {showSearch && (
-              <input
-                value={globalFilter ?? ""}
-                onChange={(e) => setGlobalFilter(e.target.value)}
-                className="px-4 py-2 w-64 outline-none border border-slate-300 rounded-md text-slate-700 placeholder:text-slate-400 text-sm focus:border-indigo-500 transition-all"
-                placeholder={searchPlaceholder}
-              />
+          <div className="flex flex-col gap-3">
+            {/* Title and Search Row */}
+            <div className="flex flex-col items-start md:flex-row justify-between gap-y-2 md:items-center">
+              {title && (
+                <h2 className="text-xl font-bold text-slate-800">{title}</h2>
+              )}
+              {showSearch && (
+                <input
+                  value={globalFilter ?? ""}
+                  onChange={(e) => setGlobalFilter(e.target.value)}
+                  className="px-4 py-2 w-64 outline-none border border-slate-300 rounded-md text-slate-700 placeholder:text-slate-400 text-sm focus:border-indigo-500 transition-all"
+                  placeholder={searchPlaceholder}
+                />
+              )}
+            </div>
+
+            {/* Action Buttons Row */}
+            {(showAddNew || showImport || showExport || showFilter) && (
+              <div className="flex items-center gap-1">
+                {showAddNew && (
+                  <button
+                    onClick={onAddNew}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-all text-sm font-medium"
+                  >
+                    <FiPlus className="text-sm" />
+                    <span>Add New</span>
+                  </button>
+                )}
+
+                {showImport && (
+                  <button
+                    onClick={onImport}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-600 text-white rounded-md hover:bg-slate-700 transition-all text-sm font-medium"
+                  >
+                    <FiUpload className="text-sm" />
+                    <span>Import</span>
+                  </button>
+                )}
+
+                {showExport && (
+                  <button
+                    onClick={onExport}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-600 text-white rounded-md hover:bg-slate-700 transition-all text-sm font-medium"
+                  >
+                    <FiDownload className="text-sm" />
+                    <span>Export</span>
+                  </button>
+                )}
+
+                {showFilter && (
+                  <div className="relative" ref={filterRef}>
+                    <button
+                      onClick={() => setIsFilterOpen(!isFilterOpen)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-600 text-white rounded-md hover:bg-slate-700 transition-all text-sm font-medium"
+                    >
+                      <FiFilter className="text-sm" />
+                      <span>Filter</span>
+                    </button>
+
+                    {isFilterOpen && filterOptions.length > 0 && (
+                      <div className="absolute top-full mt-1 left-0 bg-white border border-slate-200 rounded-md shadow-lg overflow-hidden z-10 min-w-[180px]">
+                        {filterOptions.map((option, index) => (
+                          <button
+                            key={index}
+                            onClick={() => {
+                              onFilterChange && onFilterChange(option);
+                              setIsFilterOpen(false);
+                            }}
+                            className="w-full px-4 py-2 text-sm text-left hover:bg-slate-50 transition-colors text-slate-700 whitespace-nowrap"
+                          >
+                            {option.label || option}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -87,7 +172,7 @@ const DataTable = ({
                   return (
                     <th
                       key={header.id}
-                      className={`px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wide ${
+                      className={`px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wide text-nowrap ${
                         isSticky
                           ? "sticky right-0 bg-slate-50 shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.05)]"
                           : ""
@@ -151,41 +236,18 @@ const DataTable = ({
           </div>
 
           <div className="flex items-center gap-2">
-            {/* Custom Minimalist Dropdown */}
-            <div className="relative" ref={dropdownRef}>
-              <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="px-3 py-1.5 border border-slate-300 rounded-md text-sm text-slate-700 hover:bg-slate-50 transition-all outline-none flex items-center gap-2 min-w-[80px] justify-between"
-              >
-                <span>{table.getState().pagination.pageSize}</span>
-                <FiChevronDown
-                  className={`transition-transform ${
-                    isDropdownOpen ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-
-              {isDropdownOpen && (
-                <div className="absolute bottom-full mb-1 right-0 bg-white border border-slate-200 rounded-md shadow-lg overflow-hidden z-10 min-w-[80px]">
-                  {[5, 10, 20].map((pageSize) => (
-                    <button
-                      key={pageSize}
-                      onClick={() => {
-                        table.setPageSize(pageSize);
-                        setIsDropdownOpen(false);
-                      }}
-                      className={`w-full px-4 py-2 text-sm text-left hover:bg-indigo-50 transition-colors ${
-                        table.getState().pagination.pageSize === pageSize
-                          ? "bg-indigo-50 text-indigo-600 font-semibold"
-                          : "text-slate-700"
-                      }`}
-                    >
-                      {pageSize}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+            {/* Page Size Dropdown */}
+            <Dropdown
+              value={table.getState().pagination.pageSize}
+              onChange={(size) => table.setPageSize(size)}
+              options={[
+                { label: "5", value: 5 },
+                { label: "10", value: 10 },
+                { label: "20", value: 20 },
+              ]}
+              className="min-w-[80px]"
+              position="top"
+            />
 
             <div className="flex gap-1">
               <button

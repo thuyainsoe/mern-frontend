@@ -155,9 +155,9 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="px-4 md:px-6 py-6">
+    <div className="p-3">
       {/* Stats */}
-      <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="flex justify-between items-center p-6 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 gap-3">
           <div className="flex flex-col justify-start items-start text-white text-left">
             <h2 className="text-3xl font-bold">$3434</h2>
@@ -200,8 +200,8 @@ const AdminDashboard = () => {
       </div>
 
       {/* Chart Section */}
-      <div className="w-full flex flex-wrap mt-8">
-        <div className="w-full lg:w-7/12 lg:pr-3">
+      <div className="w-full flex flex-wrap mt-3">
+        <div className="w-full lg:w-7/12 lg:pr-1">
           <div className="w-full bg-white p-6 rounded-xl shadow-lg">
             <Chart
               options={state.options}
@@ -212,7 +212,7 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className="w-full lg:w-5/12 lg:pl-4 mt-6 lg:mt-0">
+        <div className="w-full lg:w-5/12 lg:pl-3 mt-6 lg:mt-0">
           <div className="w-full bg-white pb-6 rounded-xl shadow-lg lg:h-[413px] overflow-y-auto">
             <div className="p-6 flex justify-between items-center mb-6 sticky top-0 z-50 bg-white">
               <h2 className="font-bold text-lg text-slate-800">
@@ -252,7 +252,7 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className="w-full bg-white p-6 rounded-xl shadow-lg mt-8">
+        <div className="w-full bg-white p-6 rounded-xl shadow-lg mt-3">
           <div className="flex justify-between items-center mb-6">
             <h2 className="font-bold text-lg text-slate-800">Recent Orders</h2>
             <Link className="font-semibold text-sm text-indigo-600 hover:text-indigo-700 transition-colors">

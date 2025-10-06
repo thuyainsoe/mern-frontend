@@ -26,7 +26,17 @@ const ActionButtons = ({
   const ViewButton = () => {
     if (!canView) return null;
 
-    const content = (
+    if (viewLink) {
+      return (
+        <Link to={viewLink}>
+          <div className={`${buttonClass} bg-blue-600 text-white hover:bg-blue-700 cursor-pointer`}>
+            <FiEye />
+          </div>
+        </Link>
+      );
+    }
+
+    return (
       <div
         className={`${buttonClass} bg-blue-600 text-white hover:bg-blue-700 cursor-pointer`}
         onClick={onView}
@@ -34,15 +44,23 @@ const ActionButtons = ({
         <FiEye />
       </div>
     );
-
-    return viewLink ? <Link to={viewLink}>{content}</Link> : content;
   };
 
   // Edit Button
   const EditButton = () => {
     if (!canEdit) return null;
 
-    const content = (
+    if (editLink) {
+      return (
+        <Link to={editLink}>
+          <div className={`${buttonClass} bg-slate-600 text-white hover:bg-slate-700 cursor-pointer`}>
+            <FiEdit2 />
+          </div>
+        </Link>
+      );
+    }
+
+    return (
       <div
         className={`${buttonClass} bg-slate-600 text-white hover:bg-slate-700 cursor-pointer`}
         onClick={onEdit}
@@ -50,8 +68,6 @@ const ActionButtons = ({
         <FiEdit2 />
       </div>
     );
-
-    return editLink ? <Link to={editLink}>{content}</Link> : content;
   };
 
   // Delete Button
