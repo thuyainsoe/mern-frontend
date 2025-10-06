@@ -45,9 +45,9 @@ const Sidebar = ({ showSidebar, setShowSidebar }) => {
                   to={n.path}
                   className={`${
                     pathname === n.path
-                      ? "bg-gradient-to-r from-indigo-500 to-indigo-600 shadow-lg shadow-indigo-500/30 text-white"
+                      ? "bg-slate-800 text-white"
                       : "text-slate-700 hover:bg-slate-50 font-semibold"
-                  } px-4 py-3 rounded-lg flex justify-start items-center gap-3 hover:pl-6 transition-all
+                  } px-4 py-3 rounded-md flex justify-start items-center gap-3 hover:pl-6 transition-all
                    w-full mb-2`}
                 >
                   <span className="text-lg">{n.icon}</span>
@@ -58,7 +58,7 @@ const Sidebar = ({ showSidebar, setShowSidebar }) => {
             <li className="mt-4 pt-4 border-t border-slate-200">
               <button
                 className="text-red-600 hover:bg-red-50 font-semibold
-                   px-4 py-3 rounded-lg flex justify-start items-center gap-3 hover:pl-6 transition-all
+                   px-4 py-3 rounded-md flex justify-start items-center gap-3 hover:pl-6 transition-all
                    w-full mb-2"
               >
                 <span className="text-lg">
