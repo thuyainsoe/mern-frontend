@@ -14,7 +14,7 @@ const Sidebar = ({ showSidebar, setShowSidebar }) => {
   return (
     <div>
       <div
-        className={`flex duration-200 ${
+        className={`fixed duration-200 ${
           !showSidebar ? "invisible" : "visible"
         } w-screen h-screen bg-[#0080ef80] top-0 left-0 z-10`}
         onClick={() => {
@@ -22,7 +22,7 @@ const Sidebar = ({ showSidebar, setShowSidebar }) => {
         }}
       ></div>
       <div
-        className={`w-[260px] fixed bg-[#e6e7fb] z-50 top-0 h-screen transition-all ${
+        className={`w-[260px] fixed bg-slate-100 z-50 top-0 h-screen transition-all ${
           showSidebar ? "left-0" : "-left-[260px] lg:left-0"
         }`}
       >
