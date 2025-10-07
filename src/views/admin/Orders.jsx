@@ -214,6 +214,7 @@ const Orders = () => {
   return (
     <div className="p-3">
       <DataTable
+        showAddNew={true}
         data={data}
         columns={columns}
         title="Orders Management"

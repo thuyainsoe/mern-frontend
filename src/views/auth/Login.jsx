@@ -1,8 +1,19 @@
 import { Link } from "react-router-dom";
 import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { useState } from "react";
+import { PropagateLoader } from "react-spinners";
+import { overrideStyle } from "../../utils/utils";
+import { useSelector, useDispatch } from "react-redux";
+import { messageClear, seller_login } from "../../store/Reducers/authReducer";
+import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const { loader, successMessage, errorMessage } = useSelector(
+    (state) => state.auth
+  );
+
   const [state, setState] = useState({
     email: "",
     password: "",
@@ -17,8 +28,19 @@ const Login = () => {
 
   const submit = (e) => {
     e.preventDefault();
-    console.log(state);
+    dispatch(seller_login(state));
   };
+
+  useEffect(() => {
+    if (errorMessage) {
+      toast.error(errorMessage);
+      dispatch(messageClear());
+    }
+    if (successMessage) {
+      toast.success(successMessage);
+      dispatch(messageClear());
+    }
+  }, [errorMessage, successMessage]);
 
   return (
     <div className="min-w-screen min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex justify-center items-center p-4">
@@ -70,8 +92,15 @@ const Login = () => {
               />
             </div>
 
-            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-md px-7 py-2.5 mb-4 font-medium transition-all">
-              Sign In
+            <button
+              disabled={loader ? true : false}
+              className="w-full mb-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-md px-7 py-2.5 font-medium transition-all"
+            >
+              {loader ? (
+                <PropagateLoader color="#fff" cssOverride={overrideStyle} />
+              ) : (
+                "Sign In"
+              )}
             </button>
 
             <div className="text-center text-sm text-slate-600 mb-4">

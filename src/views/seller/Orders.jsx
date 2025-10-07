@@ -198,7 +198,7 @@ const Orders = () => {
         meta: { sticky: true },
         cell: (info) => (
           <ActionButtons
-            viewLink={`/admin/dashboard/order/details/${info.row.original._id}`}
+            viewLink={`/seller/dashboard/order/details/${info.row.original._id}`}
             onEdit={() => alert(`Edit order: ${info.row.original._id}`)}
             onDelete={() => alert(`Delete order: ${info.row.original._id}`)}
             canView={true}
