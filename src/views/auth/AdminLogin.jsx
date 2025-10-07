@@ -51,39 +51,49 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-w-screen min-h-screen bg-[#cdcae9] flex justify-center items-center">
-      <div className="w-[350px] text-white p-2">
-        <div className="bg-[#6f68d1] p-4 rounded-md">
-          <div className="h-[70px] flex justify-center items-center">
-            <div className="w-[180px] h-[50px]">
-              <img
-                className="w-full h-full"
-                src="/images/logo.png"
-                alt="image"
-              />
-            </div>
+    <div className="min-w-screen min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex justify-center items-center p-4">
+      <div className="w-full max-w-md">
+        <div className="bg-white rounded-md shadow-lg p-8">
+          {/* Logo/Header */}
+          <div className="mb-6 text-center">
+            <h1 className="text-2xl font-bold text-slate-800">Admin Login</h1>
+            <p className="text-sm text-slate-600 mt-2">
+              Sign in to access the admin dashboard
+            </p>
           </div>
+
           <form onSubmit={submit}>
-            <div className="flex flex-col w-full gap-1 mb-3">
-              <label htmlFor="email">Email</label>
+            <div className="mb-4">
+              <label
+                htmlFor="email"
+                className="block text-sm font-semibold text-slate-700 mb-2"
+              >
+                Email
+              </label>
               <input
-                className="bg-transparent rounded-md px-3 outline-none py-2 border border-slate-700"
-                type="text"
+                className="w-full px-4 py-2 border border-slate-300 rounded-md outline-none text-slate-700 placeholder:text-slate-400 focus:border-blue-500 transition-all"
+                type="email"
                 name="email"
-                placeholder="Email"
+                placeholder="admin@example.com"
                 id="email"
                 required
                 onChange={inputHandler}
                 value={state.email}
               />
             </div>
-            <div className="flex flex-col w-full gap-1 mb-3">
-              <label htmlFor="password">Password</label>
+
+            <div className="mb-6">
+              <label
+                htmlFor="password"
+                className="block text-sm font-semibold text-slate-700 mb-2"
+              >
+                Password
+              </label>
               <input
-                className="bg-transparent rounded-md px-3 outline-none py-2 border border-slate-700"
+                className="w-full px-4 py-2 border border-slate-300 rounded-md outline-none text-slate-700 placeholder:text-slate-400 focus:border-blue-500 transition-all"
                 type="password"
                 name="password"
-                placeholder="Password"
+                placeholder="Enter your password"
                 id="password"
                 required
                 onChange={inputHandler}
@@ -93,12 +103,12 @@ const AdminLogin = () => {
 
             <button
               disabled={loader ? true : false}
-              className="bg-slate-800 w-full hover:shadow-blue-300 hover:shadow-lg text-white rounded-md px-7 py-2 mb-3"
+              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-md px-7 py-2.5 font-medium transition-all"
             >
               {loader ? (
                 <PropagateLoader color="#fff" cssOverride={overrideStyle} />
               ) : (
-                "Login"
+                "Sign In"
               )}
             </button>
           </form>

@@ -48,6 +48,8 @@ const SellerDetails = () => {
           </Link>
         </div>
 
+        <div className="w-full my-3 h-[1px] bg-slate-200"></div>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           {/* Image Section */}
           <div className="flex justify-center items-center">

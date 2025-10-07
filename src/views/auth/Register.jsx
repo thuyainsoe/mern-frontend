@@ -22,102 +22,120 @@ const Register = () => {
   };
 
   return (
-    <div className="min-w-screen min-h-screen bg-[#cdcae9] flex justify-center items-center">
-      <div className="w-[350px] text-white p-2">
-        <div className="bg-[#6f68d1] p-4 rounded-md">
-          <h2 className="text-xl mb-3 font-bold">Welcome to Ecommerce</h2>
-          <p className="text-sm mb-3 font-medium">
-            Please register your account.
+    <div className="min-w-screen min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex justify-center items-center p-4">
+      <div className="w-full max-w-md">
+        <div className="bg-white rounded-md shadow-lg p-8">
+          <h2 className="text-2xl font-bold text-slate-800 mb-2">
+            Create Account
+          </h2>
+          <p className="text-sm text-slate-600 mb-6">
+            Please register your account
           </p>
+
           <form onSubmit={submit}>
-            <div className="flex flex-col w-full gap-1 mb-3">
-              <label htmlFor="name">Name</label>
+            <div className="mb-4">
+              <label
+                htmlFor="name"
+                className="block text-sm font-semibold text-slate-700 mb-2"
+              >
+                Name
+              </label>
               <input
-                className="bg-transparent rounded-md px-3 outline-none py-2 border border-slate-700"
+                className="w-full px-4 py-2 border border-slate-300 rounded-md outline-none text-slate-700 placeholder:text-slate-400 focus:border-blue-500 transition-all"
                 type="text"
                 name="name"
-                placeholder="Name"
+                placeholder="Enter your name"
                 id="name"
                 required
                 onChange={inputHandler}
                 value={state.name}
               />
             </div>
-            <div className="flex flex-col w-full gap-1 mb-3">
-              <label htmlFor="email">Email</label>
+
+            <div className="mb-4">
+              <label
+                htmlFor="email"
+                className="block text-sm font-semibold text-slate-700 mb-2"
+              >
+                Email
+              </label>
               <input
-                className="bg-transparent rounded-md px-3 outline-none py-2 border border-slate-700"
-                type="text"
+                className="w-full px-4 py-2 border border-slate-300 rounded-md outline-none text-slate-700 placeholder:text-slate-400 focus:border-blue-500 transition-all"
+                type="email"
                 name="email"
-                placeholder="Email"
+                placeholder="Enter your email"
                 id="email"
                 required
                 onChange={inputHandler}
                 value={state.email}
               />
             </div>
-            <div className="flex flex-col w-full gap-1 mb-3">
-              <label htmlFor="password">Password</label>
+
+            <div className="mb-4">
+              <label
+                htmlFor="password"
+                className="block text-sm font-semibold text-slate-700 mb-2"
+              >
+                Password
+              </label>
               <input
-                className="bg-transparent rounded-md px-3 outline-none py-2 border border-slate-700"
+                className="w-full px-4 py-2 border border-slate-300 rounded-md outline-none text-slate-700 placeholder:text-slate-400 focus:border-blue-500 transition-all"
                 type="password"
                 name="password"
-                placeholder="Password"
+                placeholder="Enter your password"
                 id="password"
                 required
                 onChange={inputHandler}
                 value={state.password}
               />
             </div>
-            <div className="flex items-center w-full gap-3 mb-3">
+
+            <div className="flex items-center gap-2 mb-6">
               <input
-                className="w-4 h-4 text-blue-600 overflow-hidden bg-gray-200 rounded border border-gray-300"
+                className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-0 focus:ring-offset-0"
                 type="checkbox"
                 name="checkbox"
                 id="checkbox"
+                required
               />
-              <label htmlFor="checkbox">
+              <label htmlFor="checkbox" className="text-sm text-slate-600">
                 I agree to privacy policy & terms
               </label>
             </div>
 
-            <button className="bg-slate-800 w-full hover:shadow-blue-300 hover:shadow-lg text-white rounded-md px-7 py-2 mb-3">
+            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-md px-7 py-2.5 mb-4 font-medium transition-all">
               Sign Up
             </button>
-            <div className="flex items-center mb-3 gap-3 justify-center">
-              <p>
-                Already have an account ?{" "}
-                <Link to="/login" className="font-bold">
-                  Sign In
-                </Link>
-              </p>
+
+            <div className="text-center text-sm text-slate-600 mb-4">
+              Already have an account?{" "}
+              <Link
+                to="/login"
+                className="text-blue-600 hover:text-blue-700 font-semibold"
+              >
+                Sign In
+              </Link>
             </div>
 
-            <div className="w-full flex justify-center items-center mb-3 ">
-              <div className="w-[45%] bg-slate-700 h-[1px]"></div>
-              <div className="w-[10%] flex justify-center items-center">
-                <span className="pb-1">or</span>
-              </div>
-              <div className="w-[45%] bg-slate-700 h-[1px]"></div>
+            <div className="flex items-center my-6">
+              <div className="flex-1 h-px bg-slate-200"></div>
+              <span className="px-3 text-sm text-slate-500">or</span>
+              <div className="flex-1 h-px bg-slate-200"></div>
             </div>
 
             <div className="flex items-center justify-center gap-3">
-              <div
-                className="w-[135px] h-[35px] flex rounded-md bg-orange-700 shadow-lg hover:shadow-orange-400/50 justify-center
-              cursor-pointer items-center overflow-hidden"
+              <button
+                type="button"
+                className="flex-1 h-10 flex items-center justify-center rounded-md bg-red-600 hover:bg-red-700 text-white transition-all"
               >
-                <span>
-                  <FaGoogle />
-                </span>
-              </div>
-              <div
-                className="w-[135px] h-[35px] flex rounded-md bg-blue-700 shadow-lg hover:shadow-blue-400/50 justify-center
-              cursor-pointer items-center overflow-hidden"
+                <FaGoogle />
+              </button>
+              <button
+                type="button"
+                className="flex-1 h-10 flex items-center justify-center rounded-md bg-blue-600 hover:bg-blue-700 text-white transition-all"
               >
-                <span>
-                  <FaFacebook />
-                </span>
-              </div>
+                <FaFacebook />
+              </button>
             </div>
           </form>
         </div>
