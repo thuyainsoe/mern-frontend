@@ -16,6 +16,7 @@ const SellerToCustomer = lazy(() =>
 const SellerToAdmin = lazy(() =>
   import("../../views/seller/SellerToAdmin.jsx")
 );
+const Profile = lazy(() => import("../../views/seller/Profile.jsx"));
 
 export const sellerRoutes = [
   {
@@ -31,6 +32,12 @@ export const sellerRoutes = [
   },
   {
     path: "/seller/dashboard/add-product",
+    element: <AddProduct />,
+    role: "seller",
+    status: "active",
+  },
+  {
+    path: "/seller/dashboard/products/:productId",
     element: <AddProduct />,
     role: "seller",
     status: "active",
@@ -82,5 +89,11 @@ export const sellerRoutes = [
     element: <SellerToCustomer />,
     role: "seller",
     status: "active",
+  },
+  {
+    path: "/seller/dashboard/profile",
+    element: <Profile />,
+    role: "seller",
+    visibility: ["active", "deactive", "pending"],
   },
 ];

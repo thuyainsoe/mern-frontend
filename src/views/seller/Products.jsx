@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import DataTable from "../../components/DataTable";
 import {
   BoldTextCell,
@@ -12,6 +13,7 @@ import {
 import ActionButtons from "../../components/ActionButtons";
 
 const Products = () => {
+  const navigate = useNavigate();
   // Mock data for products
   const data = useMemo(
     () => [
@@ -137,8 +139,8 @@ const Products = () => {
         meta: { sticky: true },
         cell: (info) => (
           <ActionButtons
-            viewLink={`/admin/dashboard/product/details/${info.row.original._id}`}
-            onEdit={() => alert(`Edit product: ${info.row.original._id}`)}
+            viewLink={`/seller/dashboard/products/${info.row.original._id}`}
+            onEdit={() => navigate(`/seller/dashboard/products/${info.row.original._id}`)}
             onDelete={() => alert(`Delete product: ${info.row.original._id}`)}
             canView={true}
             canEdit={true}
