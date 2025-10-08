@@ -2,6 +2,7 @@ import React from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import InputHookForm from "./InputHookForm";
 import SelectHookForm from "./SelectHookForm";
+import SingleImageHookForm from "./SingleImageHookForm";
 
 const FormFieldsGenerator = ({ formSchema, className = "" }) => {
   const { control, watch } = useFormContext();
@@ -92,6 +93,18 @@ const FormFieldsGenerator = ({ formSchema, className = "" }) => {
                             isRequired={field.required || false}
                             isNotDisable={field.disabled || false}
                             rows={field.rows || 4}
+                          />
+                        </div>
+                      );
+
+                    case "image":
+                      return (
+                        <div key={field.id} className={containerClass}>
+                          <SingleImageHookForm
+                            name={field.name}
+                            label={field.label}
+                            isRequired={field.required || false}
+                            isNotDisable={field.disabled || false}
                           />
                         </div>
                       );
