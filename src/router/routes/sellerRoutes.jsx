@@ -18,12 +18,19 @@ const SellerToAdmin = lazy(() =>
 );
 const Profile = lazy(() => import("../../views/seller/Profile.jsx"));
 const OrderDetails = lazy(() => import("../../views/seller/OrderDetails.jsx"));
+const Pending = lazy(() => import("../../views/Pending.jsx"));
+const Deactive = lazy(() => import("../../views/Deactive.jsx"));
 
 export const sellerRoutes = [
   {
-    path: "/",
-    element: <Home />,
-    ability: ["admin", "seller"],
+    path: "/seller/account-pending",
+    element: <Pending />,
+    ability: "seller",
+  },
+  {
+    path: "/seller/account-deactive",
+    element: <Deactive />,
+    ability: "seller",
   },
   {
     path: "/seller/dashboard",

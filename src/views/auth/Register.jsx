@@ -10,8 +10,10 @@ import {
 } from "../../store/Reducers/authReducer";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loader, successMessage, errorMessage } = useSelector(
     (state) => state.auth
@@ -43,6 +45,7 @@ const Register = () => {
     if (successMessage) {
       toast.success(successMessage);
       dispatch(messageClear());
+      navigate("/");
     }
   }, [errorMessage, successMessage]);
 

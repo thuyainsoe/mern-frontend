@@ -7,8 +7,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { messageClear, seller_login } from "../../store/Reducers/authReducer";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loader, successMessage, errorMessage } = useSelector(
     (state) => state.auth
@@ -39,6 +41,7 @@ const Login = () => {
     if (successMessage) {
       toast.success(successMessage);
       dispatch(messageClear());
+      navigate("/");
     }
   }, [errorMessage, successMessage]);
 
