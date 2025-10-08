@@ -3,12 +3,16 @@ import { Link } from "react-router-dom";
 
 // Text Cell - Basic text display
 export const TextCell = ({ value, className = "" }) => (
-  <span className={`text-slate-700 whitespace-nowrap ${className}`}>{value}</span>
+  <span className={`text-slate-700 whitespace-nowrap ${className}`}>
+    {value}
+  </span>
 );
 
 // Bold Text Cell - For IDs, names, etc.
 export const BoldTextCell = ({ value, prefix = "", className = "" }) => (
-  <span className={`font-semibold text-slate-800 whitespace-nowrap ${className}`}>
+  <span
+    className={`font-semibold text-slate-800 whitespace-nowrap ${className}`}
+  >
     {prefix}
     {value}
   </span>
@@ -117,8 +121,8 @@ export const ButtonCell = ({
   );
 };
 
-// Avatar Cell - Text only with initials
-export const AvatarCell = ({ name, className = "" }) => {
+// Avatar Cell - Shows image if available, otherwise initials
+export const AvatarCell = ({ name, image, className = "" }) => {
   const getInitials = (name) => {
     if (!name) return "?";
     return name
@@ -131,10 +135,20 @@ export const AvatarCell = ({ name, className = "" }) => {
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      <div className="w-8 h-8 min-w-8 rounded-md bg-slate-200 text-slate-700 flex items-center justify-center font-semibold text-xs">
-        {getInitials(name)}
-      </div>
-      <span className="text-slate-700 font-medium whitespace-nowrap">{name}</span>
+      {image ? (
+        <img
+          src={image}
+          alt={name}
+          className="w-8 h-8 min-w-8 rounded-full object-cover"
+        />
+      ) : (
+        <div className="w-8 h-8 min-w-8 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-semibold text-xs">
+          {getInitials(name)}
+        </div>
+      )}
+      <span className="text-slate-700 font-medium whitespace-nowrap">
+        {name}
+      </span>
     </div>
   );
 };

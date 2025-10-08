@@ -5,10 +5,10 @@ import categoryService from "../services/categoryService";
 /**
  * Custom hook for fetching categories with pagination and search
  */
-export const useGetCategories = ({ page, parPage, searchValue }) => {
+export const useGetCategories = (queryParams) => {
   return useQuery({
-    queryKey: ["categories", { page, parPage, searchValue }],
-    queryFn: () => categoryService.getCategories({ page, parPage, searchValue }),
+    queryKey: ["categories", queryParams],
+    queryFn: () => categoryService.getCategories({ ...queryParams }),
     keepPreviousData: true, // Keep showing previous data while fetching new data
     staleTime: 30000, // Data is considered fresh for 30 seconds
   });

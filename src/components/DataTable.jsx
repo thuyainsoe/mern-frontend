@@ -34,8 +34,13 @@ const DataTable = ({
   onExport,
   filterOptions = [],
   onFilterChange,
+  handleSearchChange,
+  handlePageChange,
+  handlePageSizeChange,
+  queryParams,
+  pagination = null,
+  isLoading = false,
 }) => {
-  const [globalFilter, setGlobalFilter] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const filterRef = useRef(null);
 
@@ -53,10 +58,7 @@ const DataTable = ({
   const table = useReactTable({
     data,
     columns,
-    state: {
-      globalFilter,
-    },
-    onGlobalFilterChange: setGlobalFilter,
+    state: {},
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -70,7 +72,12 @@ const DataTable = ({
   return (
     <div className="w-full bg-white rounded-md shadow-lg overflow-hidden">
       {/* Header with Search and Actions */}
-      {(title || showSearch || showAddNew || showImport || showExport || showFilter) && (
+      {(title ||
+        showSearch ||
+        showAddNew ||
+        showImport ||
+        showExport ||
+        showFilter) && (
         <div className="p-4 md:py-4 md:p-6 border-b border-slate-200">
           <div className="flex flex-col gap-3">
             {/* Title and Search Row */}
@@ -80,8 +87,8 @@ const DataTable = ({
               )}
               {showSearch && (
                 <input
-                  value={globalFilter ?? ""}
-                  onChange={(e) => setGlobalFilter(e.target.value)}
+                  value={queryParams?.search || ""}
+                  onChange={(e) => handleSearchChange(e.target.value)}
                   className="px-4 py-2 w-64 outline-none border border-slate-300 rounded-md text-slate-700 placeholder:text-slate-400 text-sm focus:border-indigo-500 transition-all"
                   placeholder={searchPlaceholder}
                 />
@@ -191,32 +198,55 @@ const DataTable = ({
             ))}
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id} className="hover:bg-slate-50 transition-colors">
-                {row.getVisibleCells().map((cell, index) => {
-                  const isLastColumn =
-                    index === row.getVisibleCells().length - 1;
-                  const isSticky =
-                    isLastColumn && cell.column.columnDef.meta?.sticky;
-
-                  return (
-                    <td
-                      key={cell.id}
-                      className={`px-6 py-4 text-sm ${
-                        isSticky
-                          ? "sticky right-0 bg-white shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.05)]"
-                          : ""
-                      }`}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
-                  );
-                })}
+            {isLoading ? (
+              <tr>
+                <td
+                  colSpan={columns.length}
+                  className="px-6 py-16 text-center"
+                >
+                  <div className="flex flex-col items-center justify-center gap-3">
+                    <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                    <span className="text-sm text-slate-600">Loading data...</span>
+                  </div>
+                </td>
               </tr>
-            ))}
+            ) : table.getRowModel().rows.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={columns.length}
+                  className="px-6 py-16 text-center text-slate-500"
+                >
+                  No data available
+                </td>
+              </tr>
+            ) : (
+              table.getRowModel().rows.map((row) => (
+                <tr key={row.id} className="hover:bg-slate-50 transition-colors">
+                  {row.getVisibleCells().map((cell, index) => {
+                    const isLastColumn =
+                      index === row.getVisibleCells().length - 1;
+                    const isSticky =
+                      isLastColumn && cell.column.columnDef.meta?.sticky;
+
+                    return (
+                      <td
+                        key={cell.id}
+                        className={`px-6 py-4 text-sm ${
+                          isSticky
+                            ? "sticky right-0 bg-white shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.05)]"
+                            : ""
+                        }`}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
@@ -225,21 +255,46 @@ const DataTable = ({
       {showPagination && (
         <div className="px-6 py-4 border-t border-slate-200 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-sm text-slate-600">
-              Page {table.getState().pagination.pageIndex + 1} of{" "}
-              {table.getPageCount()}
-            </span>
-            <span className="text-sm text-slate-400">|</span>
-            <span className="text-sm text-slate-600">
-              {table.getFilteredRowModel().rows.length} total items
-            </span>
+            {pagination ? (
+              <>
+                <span className="text-sm text-slate-600">
+                  Page {pagination.current_page} of {pagination.total_pages}
+                </span>
+                <span className="text-sm text-slate-400">|</span>
+                <span className="text-sm text-slate-600">
+                  Showing {pagination.from} to {pagination.to} of{" "}
+                  {pagination.total} items
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="text-sm text-slate-600">
+                  Page {table.getState().pagination.pageIndex + 1} of{" "}
+                  {table.getPageCount()}
+                </span>
+                <span className="text-sm text-slate-400">|</span>
+                <span className="text-sm text-slate-600">
+                  {table.getFilteredRowModel().rows.length} total items
+                </span>
+              </>
+            )}
           </div>
 
           <div className="flex items-center gap-2">
             {/* Page Size Dropdown */}
             <Dropdown
-              value={table.getState().pagination.pageSize}
-              onChange={(size) => table.setPageSize(size)}
+              value={
+                pagination
+                  ? pagination.per_page
+                  : table.getState().pagination.pageSize
+              }
+              onChange={(size) => {
+                if (handlePageSizeChange) {
+                  handlePageSizeChange(size);
+                } else {
+                  table.setPageSize(size);
+                }
+              }}
               options={[
                 { label: "5", value: 5 },
                 { label: "10", value: 10 },
@@ -251,29 +306,69 @@ const DataTable = ({
 
             <div className="flex gap-1">
               <button
-                onClick={() => table.setPageIndex(0)}
-                disabled={!table.getCanPreviousPage()}
+                onClick={() => {
+                  if (handlePageChange) {
+                    handlePageChange(1);
+                  } else {
+                    table.setPageIndex(0);
+                  }
+                }}
+                disabled={
+                  pagination
+                    ? pagination.current_page === 1
+                    : !table.getCanPreviousPage()
+                }
                 className="px-3 py-1.5 border border-slate-300 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
                 First
               </button>
               <button
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
+                onClick={() => {
+                  if (handlePageChange && pagination) {
+                    handlePageChange(pagination.current_page - 1);
+                  } else {
+                    table.previousPage();
+                  }
+                }}
+                disabled={
+                  pagination
+                    ? pagination.current_page === 1
+                    : !table.getCanPreviousPage()
+                }
                 className="px-3 py-1.5 border border-slate-300 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
                 <FiChevronUp className="rotate-[-90deg]" />
               </button>
               <button
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
+                onClick={() => {
+                  if (handlePageChange && pagination) {
+                    handlePageChange(pagination.current_page + 1);
+                  } else {
+                    table.nextPage();
+                  }
+                }}
+                disabled={
+                  pagination
+                    ? pagination.current_page === pagination.total_pages
+                    : !table.getCanNextPage()
+                }
                 className="px-3 py-1.5 border border-slate-300 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
                 <FiChevronDown className="rotate-[-90deg]" />
               </button>
               <button
-                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                disabled={!table.getCanNextPage()}
+                onClick={() => {
+                  if (handlePageChange && pagination) {
+                    handlePageChange(pagination.total_pages);
+                  } else {
+                    table.setPageIndex(table.getPageCount() - 1);
+                  }
+                }}
+                disabled={
+                  pagination
+                    ? pagination.current_page === pagination.total_pages
+                    : !table.getCanNextPage()
+                }
                 className="px-3 py-1.5 border border-slate-300 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
                 Last

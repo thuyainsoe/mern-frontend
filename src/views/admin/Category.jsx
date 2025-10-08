@@ -1,14 +1,13 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect, useRef } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSearchParams } from "react-router-dom";
 import DataTable from "../../components/DataTable";
 import {
   BoldTextCell,
   TextCell,
-  StatusCell,
   DateCell,
   AvatarCell,
-  BadgeCell,
 } from "../../components/TableCells";
 import ActionButtons from "../../components/ActionButtons";
 import SideDrawer from "../../components/SideDrawer";
@@ -25,9 +24,20 @@ import {
 const Categories = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
-  const [page, setPage] = useState(1);
-  const [parPage, setParPage] = useState(10);
-  const [searchValue, setSearchValue] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchInput, setSearchInput] = useState(searchParams.get("search") || "");
+  const debounceTimerRef = useRef(null);
+
+  // Memoize query params
+  const queryParams = useMemo(() => {
+    return {
+      page: parseInt(searchParams.get("page")) || 1,
+      perPage: parseInt(searchParams.get("perPage")) || 10,
+      search: searchParams.get("search") || "",
+    };
+  }, [searchParams]);
+
+  const { page, perPage, search } = queryParams;
 
   // Form schema
   const formSchema = useMemo(() => {
@@ -39,11 +49,7 @@ const Categories = () => {
     data: categoriesData,
     isLoading,
     isError,
-  } = useGetCategories({
-    page,
-    parPage,
-    searchValue,
-  });
+  } = useGetCategories(queryParams);
 
   const addCategoryMutation = useAddCategory();
   const updateCategoryMutation = useUpdateCategory();
@@ -136,37 +142,31 @@ const Categories = () => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "_id",
-        header: "Category ID",
-        cell: (info) => <BoldTextCell value={info.getValue()} />,
-      },
-      {
         accessorKey: "name",
         header: "Category Name",
-        cell: (info) => (
-          <AvatarCell name={info.getValue()} image={info.row.original.image} />
-        ),
+        cell: (info) => {
+          console.log(info, "info");
+          return (
+            <AvatarCell
+              name={info.getValue()}
+              image={info.row.original.image}
+            />
+          );
+        },
       },
       {
-        accessorKey: "description",
-        header: "Description",
+        accessorKey: "slug",
+        header: "Slug",
         cell: (info) => <TextCell value={info.getValue()} truncate={true} />,
       },
       {
-        accessorKey: "productCount",
-        header: "Products",
-        cell: (info) => (
-          <BadgeCell value={info.getValue()} variant="secondary" />
-        ),
+        accessorKey: "createdAt",
+        header: "Created At",
+        cell: (info) => <DateCell value={info.getValue()} format="long" />,
       },
       {
-        accessorKey: "status",
-        header: "Status",
-        cell: (info) => <StatusCell value={info.getValue()} type="category" />,
-      },
-      {
-        accessorKey: "created_at",
-        header: "Date Created",
+        accessorKey: "updatedAt",
+        header: "Updated At",
         cell: (info) => <DateCell value={info.getValue()} format="long" />,
       },
       {
@@ -178,7 +178,7 @@ const Categories = () => {
             viewLink={`/admin/dashboard/category/details/${info.row.original._id}`}
             onEdit={() => handleEdit(info.row.original)}
             onDelete={() => handleDelete(info.row.original._id)}
-            canView={true}
+            canView={false}
             canEdit={true}
             canDelete={true}
           />
@@ -188,37 +188,77 @@ const Categories = () => {
     [handleEdit, handleDelete]
   );
 
-  // // Show loading state
-  // if (isLoading) {
-  //   return (
-  //     <div className="p-3 flex items-center justify-center h-64">
-  //       <div className="text-slate-600">Loading categories...</div>
-  //     </div>
-  //   );
-  // }
+  // Debounced search handler
+  const handleSearchChange = (value) => {
+    setSearchInput(value);
 
-  // // Show error state
-  // if (isError) {
-  //   return (
-  //     <div className="p-3 flex items-center justify-center h-64">
-  //       <div className="text-red-600">Failed to load categories. Please try again.</div>
-  //     </div>
-  //   );
-  // }
+    // Clear existing timer
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    // Set new timer
+    debounceTimerRef.current = setTimeout(() => {
+      setSearchParams({
+        page: "1",
+        perPage: perPage.toString(),
+        search: value,
+      });
+    }, 500); // 500ms debounce delay
+  };
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
+
+  const handlePageChange = (newPage) => {
+    setSearchParams({
+      page: newPage.toString(),
+      perPage: perPage.toString(),
+      search: search,
+    });
+  };
+
+  const handlePageSizeChange = (newSize) => {
+    setSearchParams({
+      page: "1",
+      perPage: newSize.toString(),
+      search: search,
+    });
+  };
 
   return (
     <div className="p-3">
-      <DataTable
-        data={data}
-        columns={columns}
-        title="Categories Management"
-        searchPlaceholder="Search by category ID, name..."
-        pageSize={parPage}
-        showPagination={true}
-        showSearch={true}
-        showAddNew={true}
-        onAddNew={handleAddNew}
-      />
+      {isError ? (
+        <div className="flex items-center justify-center h-64 bg-white rounded-md shadow-lg">
+          <div className="text-red-600">
+            Failed to load categories. Please try again.
+          </div>
+        </div>
+      ) : (
+        <DataTable
+          data={data}
+          columns={columns}
+          title="Categories Management"
+          searchPlaceholder="Search by category ID, name..."
+          pageSize={perPage}
+          showPagination={true}
+          showSearch={true}
+          showAddNew={true}
+          onAddNew={handleAddNew}
+          handleSearchChange={handleSearchChange}
+          handlePageChange={handlePageChange}
+          handlePageSizeChange={handlePageSizeChange}
+          pagination={categoriesData?.pagination}
+          queryParams={{ ...queryParams, search: searchInput }}
+          isLoading={isLoading}
+        />
+      )}
 
       {/* Side Drawer for Add/Edit Category */}
       <SideDrawer

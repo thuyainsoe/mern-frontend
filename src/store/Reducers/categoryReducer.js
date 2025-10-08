@@ -25,12 +25,12 @@ export const categoryAdd = createAsyncThunk(
 export const get_category = createAsyncThunk(
   "category/get_category",
   async (
-    { parPage, page, searchValue },
+    { perPage, page, searchValue },
     { rejectWithValue, fulfillWithValue }
   ) => {
     try {
       const { data } = await api.get(
-        `/category-get?page=${page}&&searchValue=${searchValue}&&parPage=${parPage}`,
+        `/category-get?page=${page}&&searchValue=${searchValue}&&perPage=${perPage}`,
         { withCredentials: true }
       );
       // console.log(data)

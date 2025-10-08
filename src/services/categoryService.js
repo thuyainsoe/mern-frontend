@@ -6,11 +6,11 @@ import api from "../api/api";
 const categoryService = {
   /**
    * Get all categories with pagination and search
-   * @param {Object} params - { page, parPage, searchValue }
+   * @param {Object} params - { page, perPage, searchValue }
    */
-  getCategories: async ({ page = 1, parPage = 10, searchValue = "" }) => {
+  getCategories: async ({ page = 1, perPage = 10, search = "" }) => {
     const { data } = await api.get(
-      `/category-get?page=${page}&searchValue=${searchValue}&parPage=${parPage}`,
+      `/category-get?page=${page}&searchValue=${search}&perPage=${perPage}`,
       { withCredentials: true }
     );
     return data;
