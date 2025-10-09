@@ -53,7 +53,7 @@ const categoryService = {
    * @param {string} id - Category ID
    */
   deleteCategory: async (id) => {
-    const { data } = await api.delete(`/category/${id}`, {
+    const { data } = await api.delete(`/category-delete/${id}`, {
       withCredentials: true,
     });
     return data;

@@ -25,7 +25,9 @@ const Categories = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [searchInput, setSearchInput] = useState(searchParams.get("search") || "");
+  const [searchInput, setSearchInput] = useState(
+    searchParams.get("search") || ""
+  );
   const debounceTimerRef = useRef(null);
 
   // Memoize query params
@@ -77,9 +79,10 @@ const Categories = () => {
   // Open drawer for editing category
   const handleEdit = (category) => {
     setEditingCategory(category);
+    console.log(category, "category");
     methods.reset({
       name: category.name,
-      image: null,
+      image: category.image,
     });
     setIsDrawerOpen(true);
   };
@@ -145,7 +148,6 @@ const Categories = () => {
         accessorKey: "name",
         header: "Category Name",
         cell: (info) => {
-          console.log(info, "info");
           return (
             <AvatarCell
               name={info.getValue()}

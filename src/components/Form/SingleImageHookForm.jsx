@@ -12,6 +12,7 @@ const SingleImageHookForm = ({
   const {
     control,
     formState: { errors },
+    watch,
   } = useFormContext();
 
   const [preview, setPreview] = useState(null);
@@ -51,10 +52,10 @@ const SingleImageHookForm = ({
         control={control}
         render={({ field: { onChange, value } }) => (
           <div className="w-full">
-            {preview ? (
+            {preview || watch(name) ? (
               <div className="relative w-full h-[200px] rounded-md border-2 border-slate-200 overflow-hidden group">
                 <img
-                  src={preview}
+                  src={preview || watch(name)}
                   alt="Preview"
                   className="w-full h-full object-cover"
                 />
