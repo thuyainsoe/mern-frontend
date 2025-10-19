@@ -139,10 +139,10 @@ export const AvatarCell = ({ name, image, className = "" }) => {
         <img
           src={image}
           alt={name}
-          className="w-8 h-8 min-w-8 rounded-full object-cover"
+          className="w-8 h-8 min-w-8 rounded-md object-cover"
         />
       ) : (
-        <div className="w-8 h-8 min-w-8 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-semibold text-xs">
+        <div className="w-8 h-8 min-w-8 rounded-md bg-slate-200 text-slate-700 flex items-center justify-center font-semibold text-xs">
           {getInitials(name)}
         </div>
       )}

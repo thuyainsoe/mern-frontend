@@ -4,8 +4,13 @@ const Home = lazy(() => import("../../views/Home"));
 const SellerDashboard = lazy(() =>
   import("../../views/seller/SellerDashboard")
 );
-const AddProduct = lazy(() => import("../../views/seller/AddProduct.jsx"));
-const Products = lazy(() => import("../../views/seller/Products.jsx"));
+const AddProduct = lazy(() =>
+  import("../../views/seller/product/AddProduct.jsx")
+);
+const Products = lazy(() => import("../../views/seller/product/Products.jsx"));
+const ProductDetail = lazy(() =>
+  import("../../views/seller/product/ProductDetail.jsx")
+);
 const Orders = lazy(() => import("../../views/seller/Orders.jsx"));
 const DiscountProducts = lazy(() =>
   import("../../views/seller/DiscountProducts.jsx")
@@ -41,6 +46,12 @@ export const sellerRoutes = [
   {
     path: "/seller/dashboard/add-product",
     element: <AddProduct />,
+    role: "seller",
+    status: "active",
+  },
+  {
+    path: "/seller/dashboard/product/detail/:productId",
+    element: <ProductDetail />,
     role: "seller",
     status: "active",
   },
