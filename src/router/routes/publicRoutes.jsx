@@ -1,4 +1,6 @@
 import { lazy } from "react";
+import ProtectAuthRoute from "./ProtectAuthRoute";
+
 const Login = lazy(() => import("../../views/auth/Login.jsx"));
 const Register = lazy(() => import("../../views/auth/Register.jsx"));
 const AdminLogin = lazy(() => import("../../views/auth/AdminLogin.jsx"));
@@ -13,15 +15,27 @@ const publicRoutes = [
   },
   {
     path: "/login",
-    element: <Login />,
+    element: (
+      <ProtectAuthRoute>
+        <Login />
+      </ProtectAuthRoute>
+    ),
   },
   {
     path: "/register",
-    element: <Register />,
+    element: (
+      <ProtectAuthRoute>
+        <Register />
+      </ProtectAuthRoute>
+    ),
   },
   {
     path: "/admin/login",
-    element: <AdminLogin />,
+    element: (
+      <ProtectAuthRoute>
+        <AdminLogin />
+      </ProtectAuthRoute>
+    ),
   },
   {
     path: "/unauthorized",
