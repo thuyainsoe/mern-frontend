@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FaFacebook, FaGoogle } from "react-icons/fa";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { PropagateLoader } from "react-spinners";
 import { overrideStyle } from "../../utils/utils";
@@ -8,11 +8,12 @@ import {
   messageClear,
   seller_register,
 } from "../../store/Reducers/authReducer";
-import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 const Register = () => {
+  useDocumentTitle("Seller Register");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loader, successMessage, errorMessage } = useSelector(

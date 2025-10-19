@@ -5,8 +5,10 @@ import { PropagateLoader } from "react-spinners";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { overrideStyle } from "../../utils/utils";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 const AdminLogin = () => {
+  useDocumentTitle("Admin Login");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

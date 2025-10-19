@@ -1,15 +1,16 @@
 import { Link } from "react-router-dom";
 import { FaFacebook, FaGoogle } from "react-icons/fa";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PropagateLoader } from "react-spinners";
 import { overrideStyle } from "../../utils/utils";
 import { useSelector, useDispatch } from "react-redux";
 import { messageClear, seller_login } from "../../store/Reducers/authReducer";
 import toast from "react-hot-toast";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 const Login = () => {
+  useDocumentTitle("Seller Login");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loader, successMessage, errorMessage } = useSelector(
