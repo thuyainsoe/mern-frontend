@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../api/api";
 
-export const categoryAdd = createAsyncThunk(
+export const productAdd = createAsyncThunk(
   "category/categoryAdd",
   async ({ name, image }, { rejectWithValue, fulfillWithValue }) => {
     try {
@@ -22,7 +22,7 @@ export const categoryAdd = createAsyncThunk(
 
 // End Method
 
-export const get_category = createAsyncThunk(
+export const get_product = createAsyncThunk(
   "category/get_category",
   async (
     { perPage, page, searchValue },
@@ -44,7 +44,7 @@ export const get_category = createAsyncThunk(
 
 // End Method
 
-export const updateCategory = createAsyncThunk(
+export const updateProduct = createAsyncThunk(
   "category/updateCategory",
   async ({ id, name, image }, { rejectWithValue, fulfillWithValue }) => {
     try {
@@ -67,7 +67,7 @@ export const updateCategory = createAsyncThunk(
 
 // End Method
 
-export const deleteCategory = createAsyncThunk(
+export const deleteProduct = createAsyncThunk(
   "category/deleteCategory",
   async (id, { rejectWithValue }) => {
     try {
@@ -81,7 +81,7 @@ export const deleteCategory = createAsyncThunk(
 
 // End Method
 
-export const categoryReducer = createSlice({
+export const productReducer = createSlice({
   name: "category",
   initialState: {
     successMessage: "",
@@ -109,12 +109,10 @@ export const categoryReducer = createSlice({
         state.successMessage = payload.message;
         state.categorys = [...state.categorys, payload.category];
       })
-
       .addCase(get_category.fulfilled, (state, { payload }) => {
         state.totalCategory = payload.totalCategory;
         state.categorys = payload.categorys;
       })
-
       .addCase(updateCategory.fulfilled, (state, { payload }) => {
         state.loader = false;
         state.successMessage = payload.message;
@@ -125,12 +123,10 @@ export const categoryReducer = createSlice({
           state.categorys[index] = payload.category;
         }
       })
-
       .addCase(updateCategory.rejected, (state, { payload }) => {
         state.loader = false;
         state.errorMessage = payload.error;
       })
-
       .addCase(deleteCategory.fulfilled, (state, action) => {
         state.categorys = state.categorys.filter(
           (cat) => cat._id !== action.meta.arg
@@ -142,5 +138,5 @@ export const categoryReducer = createSlice({
       });
   },
 });
-export const { messageClear } = categoryReducer.actions;
-export default categoryReducer.reducer;
+export const { messageClear } = productReducer.actions;
+export default productReducer.reducer;

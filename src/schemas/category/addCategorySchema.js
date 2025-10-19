@@ -10,9 +10,12 @@ export const AddCategoryFormSchema = z.object({
 
   image: z
     .any()
-    .refine((file) => file instanceof File || file === null, {
-      message: "Please upload a valid image file",
-    })
+    .refine(
+      (file) => file instanceof File || file === null || typeof file === "string",
+      {
+        message: "Please upload a valid image file",
+      }
+    )
     .optional()
     .nullable(),
 });

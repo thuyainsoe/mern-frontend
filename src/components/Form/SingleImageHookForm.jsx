@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { IoMdImages, IoMdCloseCircle } from "react-icons/io";
 
@@ -16,8 +16,18 @@ const SingleImageHookForm = ({
   } = useFormContext();
 
   const [preview, setPreview] = useState(null);
+  const currentValue = watch(name);
 
   const error = errors[name]?.message;
+
+  // Initialize preview with existing image URL when editing
+  useEffect(() => {
+    if (typeof currentValue === "string" && currentValue) {
+      setPreview(currentValue);
+    } else if (currentValue === null) {
+      setPreview(null);
+    }
+  }, [currentValue]);
 
   const handleImageChange = (file, onChange) => {
     if (file) {
@@ -30,8 +40,8 @@ const SingleImageHookForm = ({
   };
 
   const handleRemoveImage = (onChange) => {
-    // Revoke preview URL to free memory
-    if (preview) {
+    // Only revoke if it's a blob URL (not an external URL)
+    if (preview && preview.startsWith("blob:")) {
       URL.revokeObjectURL(preview);
     }
     setPreview(null);
@@ -50,15 +60,19 @@ const SingleImageHookForm = ({
       <Controller
         name={name}
         control={control}
-        render={({ field: { onChange, value } }) => (
-          <div className="w-full">
-            {preview || watch(name) ? (
-              <div className="relative w-full h-[200px] rounded-md border-2 border-slate-200 overflow-hidden group">
-                <img
-                  src={preview || watch(name)}
-                  alt="Preview"
-                  className="w-full h-full object-cover"
-                />
+        render={({ field: { onChange, value } }) => {
+          // Determine the image source (prefer preview, fallback to value if it's a string URL)
+          const imageSrc = preview || (typeof value === "string" ? value : null);
+
+          return (
+            <div className="w-full">
+              {imageSrc ? (
+                <div className="relative w-full h-[200px] rounded-md border-2 border-slate-200 overflow-hidden group">
+                  <img
+                    src={imageSrc}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                  />
                 {!isNotDisable && (
                   <button
                     type="button"
@@ -102,7 +116,8 @@ const SingleImageHookForm = ({
               className="hidden"
             />
           </div>
-        )}
+          );
+        }}
       />
 
       {error && <p className="text-red-600 min-w-full text-xs">* {error}</p>}

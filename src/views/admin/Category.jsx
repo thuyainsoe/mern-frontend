@@ -1,14 +1,8 @@
-import React, { useMemo, useState, useEffect, useRef } from "react";
+import { useMemo, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSearchParams } from "react-router-dom";
 import DataTable from "../../components/DataTable";
-import {
-  BoldTextCell,
-  TextCell,
-  DateCell,
-  AvatarCell,
-} from "../../components/TableCells";
+import { TextCell, DateCell, AvatarCell } from "../../components/TableCells";
 import ActionButtons from "../../components/ActionButtons";
 import SideDrawer from "../../components/SideDrawer";
 import FormFieldsGenerator from "../../components/Form/FormFieldsGenerator";
@@ -20,26 +14,26 @@ import {
   useUpdateCategory,
   useDeleteCategory,
 } from "../../hooks/useCategory";
+import { useSearchParamsWithDebounce } from "../../hooks/useSearchParams";
 
 const Categories = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [searchInput, setSearchInput] = useState(
-    searchParams.get("search") || ""
-  );
-  const debounceTimerRef = useRef(null);
 
-  // Memoize query params
-  const queryParams = useMemo(() => {
-    return {
-      page: parseInt(searchParams.get("page")) || 1,
-      perPage: parseInt(searchParams.get("perPage")) || 10,
-      search: searchParams.get("search") || "",
-    };
-  }, [searchParams]);
+  // Use custom search params hook
+  const {
+    queryParams,
+    searchInput,
+    handleSearchChange,
+    handlePageChange,
+    handlePageSizeChange,
+  } = useSearchParamsWithDebounce({
+    page: 1,
+    perPage: 10,
+    search: "",
+  });
 
-  const { page, perPage, search } = queryParams;
+  const { perPage } = queryParams;
 
   // Form schema
   const formSchema = useMemo(() => {
@@ -79,7 +73,6 @@ const Categories = () => {
   // Open drawer for editing category
   const handleEdit = (category) => {
     setEditingCategory(category);
-    console.log(category, "category");
     methods.reset({
       name: category.name,
       image: category.image,
@@ -189,50 +182,6 @@ const Categories = () => {
     ],
     [handleEdit, handleDelete]
   );
-
-  // Debounced search handler
-  const handleSearchChange = (value) => {
-    setSearchInput(value);
-
-    // Clear existing timer
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
-
-    // Set new timer
-    debounceTimerRef.current = setTimeout(() => {
-      setSearchParams({
-        page: "1",
-        perPage: perPage.toString(),
-        search: value,
-      });
-    }, 500); // 500ms debounce delay
-  };
-
-  // Cleanup timer on unmount
-  useEffect(() => {
-    return () => {
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
-      }
-    };
-  }, []);
-
-  const handlePageChange = (newPage) => {
-    setSearchParams({
-      page: newPage.toString(),
-      perPage: perPage.toString(),
-      search: search,
-    });
-  };
-
-  const handlePageSizeChange = (newSize) => {
-    setSearchParams({
-      page: "1",
-      perPage: newSize.toString(),
-      search: search,
-    });
-  };
 
   return (
     <div className="p-3">

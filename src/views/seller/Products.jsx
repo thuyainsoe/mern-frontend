@@ -140,7 +140,9 @@ const Products = () => {
         cell: (info) => (
           <ActionButtons
             viewLink={`/seller/dashboard/products/${info.row.original._id}`}
-            onEdit={() => navigate(`/seller/dashboard/products/${info.row.original._id}`)}
+            onEdit={() =>
+              navigate(`/seller/dashboard/products/${info.row.original._id}`)
+            }
             onDelete={() => alert(`Delete product: ${info.row.original._id}`)}
             canView={true}
             canEdit={true}
@@ -157,11 +159,15 @@ const Products = () => {
       <DataTable
         data={data}
         columns={columns}
+        showSearch={true}
+        showAddNew={true}
+        onAddNew={() => {
+          navigate(`/seller/dashboard/add-product`);
+        }}
         title="Products Management"
         searchPlaceholder="Search by product, category, seller..."
         pageSize={10}
         showPagination={true}
-        showSearch={true}
       />
     </div>
   );

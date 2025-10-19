@@ -89,20 +89,6 @@ const AddProduct = () => {
   };
 
   const onSubmit = (data) => {
-    const formData = new FormData();
-    formData.append("name", data.name);
-    formData.append("description", data.description);
-    formData.append("price", data.price);
-    formData.append("stock", data.stock);
-    formData.append("category", data.category);
-    formData.append("discount", data.discount || 0);
-    formData.append("shopName", "EasyShop");
-    formData.append("brand", data.brand);
-
-    for (let i = 0; i < images.length; i++) {
-      formData.append("images", images[i]);
-    }
-
     // TODO: Replace with Redux dispatch when ready
     console.log("Product Data:", {
       ...data,
